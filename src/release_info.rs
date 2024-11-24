@@ -33,14 +33,14 @@ impl<'a> Default for ReleaseInfo<'a> {
 
 impl ReleaseInfo<'_> {
     pub async fn get_latest_release_info(&self, pair: String) -> Result<(Version, Sha256Sum)> {
-        let (lastest_releases, sha256sums) = join!(
+        let (latest_releases, sha256sums) = join!(
             LatestReleases::get_from(self.latest_releases_url),
             Sha256Sums::get_from(self.sha256sums_url)
         );
 
-        let (lastest_releases, sha256sums) = (lastest_releases?, sha256sums?);
+        let (latest_releases, sha256sums) = (latest_releases?, sha256sums?);
 
-        let version = lastest_releases.get_version(pair)?;
+        let version = latest_releases.get_version(pair)?;
         let filename = format!("factorio-headless_linux_{version}.tar.xz");
 
         let sha256sum = sha256sums.get_sha256sum_for_file(filename)?;
